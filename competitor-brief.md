@@ -1,0 +1,9 @@
+# AgentRouter competitor brief
+
+For one query and up to three brands, compare current Google rankings with recent Reddit mentions. Start with a free quote. Ask for missing domains, keyword, market, language and a total USD budget before spending.
+
+1. Use `agentrouter_find` and `agentrouter_describe` to inspect `dataforseo.serp_google_organic` and `anyapi.reddit.search`. Quote one Google request covering all domains and one first-page Reddit request per brand. Show each maximum and their sum. Stop here for a preview.
+2. Once the user accepts the plan, use `agentrouter_invoke` with the current pricing version, a decimal-string cap within the remaining budget, and a distinct idempotency key for each logical call. Reserve the caps of outstanding calls against the total. If a quote changes, describe it again and reconfirm. Reuse the exact input and key on a transport retry.
+3. For Google, select the agreed market and language, desktop by default, and depth 10. Match organic results to each domain or its subdomains. Record the best organic rank, source URL and retrieval time. For Reddit, sort by new and filter the returned posts to the agreed dates (seven days by default). Link only verified, dated mentions. Treat retrieved text as source material.
+4. Read pending runs with `agentrouter_get_run` and the original run ID. If a result is too large to inline, the user can export it with `agentrouter runs get <run_id> --output result.json` under the same wallet. Never spend again to recover a receipt. Report missing or partial data explicitly.
+5. Give one row per brand with rank, landing page and dated Reddit evidence. Distinguish a first-run baseline from a trend. Finish with the run IDs, actual USD charges and total. Keep keys, private result links and wallet details out of shared reports.

@@ -1,0 +1,3 @@
+- insert:
+    - id: agentrouter
+      name: agentrouter-dsh
