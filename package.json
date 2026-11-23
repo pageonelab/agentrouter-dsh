@@ -1,0 +1,18 @@
+{
+  "name": "agentrouter-dsh",
+  "version": "0.1.0",
+  "description": "Find provider tools, preview prices and run approved research from DeepSeek Harness.",
+  "type": "module",
+  "main": "./index.js",
+  "files": ["index.js", "cordis.patch.yml", "competitor-brief.md"],
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
+  "engines": { "node": ">=24.9.0", "dsh": "0.2.2-rc.5" },
+  "peerDependencies": { "@deepseek-ai/dsh-tools": "0.2.2-rc.5" },
+  "devDependencies": { "@deepseek-ai/dsh-tools": "0.2.2-rc.5" },
+  "scripts": { "test": "node --test test/*.test.js" },
+  "keywords": ["dsh-plugin", "deepseek-harness", "agentrouter", "research"],
+  "repository": { "type": "git", "url": "git+https://github.com/pageonelab/agentrouter-dsh.git" },
+  "homepage": "https://www.agentrouter.to/tools?utm_source=dsh&utm_medium=plugin",
+  "author": "PageOneLab",
+  "license": "MIT"
+}
