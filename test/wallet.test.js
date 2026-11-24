@@ -48,4 +48,8 @@ test('approved retries carry the same billing constraints; receipt lookup cannot
   assert.deepEqual(first, retry)
   assert.equal(receipt, 'https://api.agentrouter.to/v1/runs/run_demo')
   assert.equal(lookup.method, 'GET')
+  const { max_cost_usd, ...uncapped } = args
+  await invoke.execute({ ...uncapped, idempotency_key: 'uncapped' }, exec)
+  assert.match(approvals[2].reason, /actual usage/)
+  assert.equal('max_cost_usd' in JSON.parse(send.mock.calls[3].arguments[1].body), false)
 })

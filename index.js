@@ -69,23 +69,23 @@ export function apply(ctx) {
 
   ctx.tools.register(defineTool({
     name: 'agentrouter_invoke',
-    description: 'Request approval for one provider call with an explicit USD ceiling. Reuse the same idempotency key and arguments to retry.',
+    description: 'Request approval for one provider call with an optional USD ceiling. Reuse the same idempotency key and arguments to retry.',
     parameters: {
       tool_id: text, pricing_version: text,
       input: { oneOf: [{ type: 'object', additionalProperties: true }, { type: 'array' }], required: true },
-      max_cost_usd: { ...text, description: 'Maximum USD charge for this call, as a decimal string.' },
+      max_cost_usd: { type: 'string', description: 'Maximum USD charge for this call, as a decimal string.' },
       idempotency_key: { ...text, description: 'A unique stable ID for this logical call. Reuse it on retry.' },
       session_id: { type: 'string' },
     },
     output,
     async execute({ tool_id, pricing_version, input, max_cost_usd, idempotency_key, session_id }, exec) {
-      if (!/^(0|[1-9]\d*)(\.\d{1,12})?$/.test(max_cost_usd)) throw new Error('Provide a nonnegative decimal USD ceiling with up to 12 fractional digits.')
+      if (max_cost_usd != null && (typeof max_cost_usd !== 'string' || !/^(0|[1-9]\d*)(\.\d{1,12})?$/.test(max_cost_usd))) throw new Error('Provide a nonnegative decimal USD ceiling with up to 12 fractional digits.')
       if (!/^[A-Za-z0-9._:-]{1,200}$/.test(idempotency_key)) throw new Error('Use a stable idempotency key of 1–200 letters, digits, dots, underscores, colons or hyphens.')
       const key = await walletKey(ctx)
       if (!exec.agent || !ctx.approval) throw new Error('This profile has no approval service for paid calls.')
       const decision = await ctx.approval.request({
         agent: exec.agent, callId: exec.callId, toolName: 'agentrouter_invoke', signal: exec.signal,
-        reason: 'Send ' + JSON.stringify(input) + ' to ' + tool_id + ' through AgentRouter for up to USD ' + max_cost_usd + '?',
+        reason: 'Send ' + JSON.stringify(input) + ' to ' + tool_id + ' through AgentRouter ' + (max_cost_usd == null ? 'at actual usage under your account budgets?' : 'for up to USD ' + max_cost_usd + '?'),
       })
       if (decision !== 'allowed-once') throw new Error('The call did not receive one-time approval.')
       return request('/invoke', exec.signal, { tool_id, pricing_version, input, max_cost_usd, session_id }, key, idempotency_key)
