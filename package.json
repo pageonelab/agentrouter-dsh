@@ -1,6 +1,6 @@
 {
   "name": "agentrouter-dsh",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Find provider tools, preview prices and run approved research from DeepSeek Harness.",
   "type": "module",
   "main": "./index.js",
