@@ -1,10 +1,10 @@
 {
   "name": "agentrouter-dsh",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Find provider tools, preview prices and run approved research from DeepSeek Harness.",
   "type": "module",
   "main": "./index.js",
-  "files": ["index.js", "cordis.patch.yml", "competitor-brief.md"],
+  "files": ["index.js", "cordis.patch.yml", "skills.json", "skills"],
   "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
   "engines": { "node": ">=24.9.0", "dsh": "0.2.2-rc.5" },
   "peerDependencies": { "@deepseek-ai/dsh-tools": "0.2.2-rc.5" },
