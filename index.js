@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { defineTool } from '@deepseek-ai/dsh-tools'
+import skills from './skills.json' with { type: 'json' }
 
 export const name = 'agentrouter'
 export const inject = {
@@ -44,12 +45,17 @@ async function walletKey(ctx) {
 }
 
 export function apply(ctx) {
-  ctx.skills.register({
-    name: 'agentrouter-competitor-brief',
-    description: 'Compare a Google query with recent Reddit mentions and quote the research cost before spending.',
-    source: 'runtime',
-    content: readFileSync(new URL('./competitor-brief.md', import.meta.url), 'utf8'),
-  })
+  for (const [name, description] of Object.entries(skills)) {
+    const content = readFileSync(new URL(`./skills/${name}/SKILL.md`, import.meta.url), 'utf8')
+    const skill = { name, description, content, source: 'runtime' }
+    ctx.skills.register(skill)
+    if (name === 'competitor-brief') {
+      ctx.skills.register({
+        ...skill, name: 'agentrouter-competitor-brief',
+        invocation: { modelInvocable: false, userInvocable: true },
+      })
+    }
+  }
 
   ctx.tools.register(defineTool({
     name: 'agentrouter_find',
